@@ -517,11 +517,15 @@ function submitForm(){
   ------------------------------------------------------- */
   var SHEET_URL='https://script.google.com/macros/s/AKfycbwTA8Wg_ZZHn8X9E-52mdF-bzxdeLtFoqriraWkBIvp-ZF7VmNLxWCSZtUl_tosxMIJ/exec';
 
-  fetch(SHEET_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({name:name,email:email,university:uni,city:city,role:selectedRole,timestamp:new Date().toISOString()})
-  })
+  var formData=new FormData();
+  formData.append('timestamp',new Date().toISOString());
+  formData.append('name',name);
+  formData.append('email',email);
+  formData.append('university',uni);
+  formData.append('city',city);
+  formData.append('role',selectedRole);
+
+  fetch(SHEET_URL,{method:'POST',body:formData})
   .then(function(){showSuccess(city);})
   .catch(function(){showSuccess(city);});
 }
