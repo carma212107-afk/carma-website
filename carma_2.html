@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carma — Student Intercity Ridesharing</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f5fff8;--bg2:#edfaf2;--bg3:#e0f5e9;
+  --green:#0a5c2e;--green-mid:#127a3e;--green-light:#1a9e52;
+  --green-pale:#c8edd6;--green-faint:#dff5e8;
+  --text:#0a1f12;--muted:#3a6b4a;--border:#b5ddc3;--white:#ffffff;
+  --red:#c0392b;--amber:#b07d0a;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;line-height:1.6;overflow-x:hidden;}
+.page{max-width:1100px;margin:0 auto;padding:0 2rem;}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 2rem;position:sticky;top:0;z-index:100;background:rgba(245,255,248,0.96);backdrop-filter:blur(8px);border-bottom:1.5px solid var(--border);}
+.logo{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800;color:var(--green);letter-spacing:-0.5px;text-decoration:none;}
+.logo span{color:var(--green-light);}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;}
+.nav-links a:hover{color:var(--green);}
+.btn-nav{background:var(--green);color:#fff;padding:9px 22px;border-radius:100px;font-size:14px;font-weight:600;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;text-decoration:none;}
+.btn-nav:hover{background:var(--green-mid);}
+
+/* HERO */
+.hero{padding:6rem 2rem 3.5rem;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:var(--green-faint);border:1.5px solid var(--green-pale);border-radius:100px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:600;margin-bottom:2rem;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green-light);animation:pulse 2s infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+h1{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(44px,7.5vw,86px);font-weight:800;line-height:0.96;letter-spacing:-3px;margin-bottom:1.5rem;color:var(--green);}
+h1 .pop{color:var(--green-light);}
+.hero-sub{font-size:18px;color:var(--muted);max-width:560px;line-height:1.75;margin-bottom:2rem;font-weight:300;}
+.route-pill-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:2.5rem;}
+.route-pill{background:var(--white);border:1.5px solid var(--border);border-radius:100px;padding:7px 16px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:7px;}
+.route-pill .city{color:var(--green);font-weight:600;}
+.route-pill .arr{color:var(--green-light);font-weight:700;}
+.hero-ctas{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;}
+.btn-primary{background:var(--green);color:#fff;padding:15px 34px;border-radius:100px;font-size:16px;font-weight:600;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;text-decoration:none;display:inline-block;}
+.btn-primary:hover{background:var(--green-mid);}
+.btn-ghost{background:var(--white);color:var(--green);padding:15px 34px;border-radius:100px;font-size:16px;font-weight:600;border:2px solid var(--green);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;text-decoration:none;display:inline-block;}
+.btn-ghost:hover{background:var(--green-faint);}
+.hero-note{font-size:13px;color:var(--muted);}
+
+/* COMPARE */
+.compare{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5px;background:var(--border);border:1.5px solid var(--border);border-radius:20px;overflow:hidden;margin:3rem 2rem;}
+.cmp{background:var(--white);padding:1.75rem 1.5rem;text-align:center;}
+.cmp.highlight{background:var(--green);}
+.cmp-label{font-size:12px;color:var(--muted);margin-bottom:0.5rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+.cmp.highlight .cmp-label{color:rgba(255,255,255,0.7);}
+.cmp-price{font-family:'Bricolage Grotesque',sans-serif;font-size:34px;font-weight:800;letter-spacing:-1px;}
+.cmp-price.bad{color:var(--red);}
+.cmp-price.mid{color:var(--amber);}
+.cmp-price.good{color:#fff;}
+.cmp-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+.cmp.highlight .cmp-sub{color:rgba(255,255,255,0.65);}
+.cmp-tag{display:inline-block;background:#fff;color:var(--green);font-size:11px;font-weight:700;padding:4px 12px;border-radius:100px;margin-top:10px;}
+
+/* SECTIONS */
+.section{padding:5rem 2rem;}
+.sec-label{font-size:12px;font-weight:700;letter-spacing:2px;color:var(--green-light);text-transform:uppercase;margin-bottom:1rem;}
+.sec-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(30px,4.5vw,46px);font-weight:800;letter-spacing:-1.5px;line-height:1.05;margin-bottom:1rem;color:var(--green);}
+.sec-sub{font-size:16px;color:var(--muted);max-width:500px;font-weight:300;line-height:1.75;}
+
+/* DRIVER / PASSENGER */
+.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2.5rem;}
+.split-card{border-radius:24px;padding:2.5rem;border:1.5px solid var(--border);}
+.split-card.driver{background:var(--green);}
+.split-card.passenger{background:var(--white);}
+.split-badge{display:inline-flex;align-items:center;gap:8px;border-radius:100px;padding:5px 14px;font-size:12px;font-weight:700;margin-bottom:1.25rem;letter-spacing:0.3px;}
+.split-badge.d{background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.35);}
+.split-badge.p{background:var(--green-faint);color:var(--green);border:1.5px solid var(--green-pale);}
+.split-title{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800;margin-bottom:0.75rem;letter-spacing:-0.5px;line-height:1.15;}
+.split-card.driver .split-title{color:#fff;}
+.split-card.passenger .split-title{color:var(--green);}
+.split-desc{font-size:14px;line-height:1.75;margin-bottom:1.5rem;font-weight:300;}
+.split-card.driver .split-desc{color:rgba(255,255,255,0.75);}
+.split-card.passenger .split-desc{color:var(--muted);}
+.split-perks{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.split-perks li{display:flex;align-items:flex-start;gap:10px;font-size:14px;}
+.split-card.driver .split-perks li{color:rgba(255,255,255,0.85);}
+.split-card.passenger .split-perks li{color:var(--muted);}
+.perk-dot{width:6px;height:6px;border-radius:50%;margin-top:7px;flex-shrink:0;}
+.split-card.driver .perk-dot{background:rgba(255,255,255,0.6);}
+.split-card.passenger .perk-dot{background:var(--green-light);}
+
+/* CALCULATOR */
+.calc-box{background:var(--white);border:1.5px solid var(--border);border-radius:24px;padding:2.5rem;margin-top:3rem;}
+.calc-title{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;margin-bottom:0.4rem;color:var(--green);letter-spacing:-0.5px;}
+.calc-sub{font-size:14px;color:var(--muted);margin-bottom:2rem;}
+.calc-inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:2rem;}
+.calc-field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+.calc-field input,.calc-field select{width:100%;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;color:var(--text);font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;}
+.calc-field input:focus,.calc-field select:focus{border-color:var(--green-light);}
+.calc-result{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+.calc-res-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:1.25rem;text-align:center;}
+.calc-res-card.main{background:var(--green);border-color:var(--green);}
+.calc-res-label{font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+.calc-res-card.main .calc-res-label{color:rgba(255,255,255,0.7);}
+.calc-res-val{font-family:'Bricolage Grotesque',sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.5px;color:var(--green);}
+.calc-res-card.main .calc-res-val{color:#fff;}
+.calc-res-note{font-size:11px;color:var(--muted);margin-top:4px;}
+.calc-res-card.main .calc-res-note{color:rgba(255,255,255,0.6);}
+
+/* TRAVEL OPTIONS */
+.options-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2.5rem;}
+.opt-card{background:var(--white);border:1.5px solid var(--border);border-radius:20px;padding:2rem;}
+.opt-tag{display:inline-block;border-radius:100px;padding:4px 14px;font-size:11px;font-weight:700;margin-bottom:1rem;text-transform:uppercase;letter-spacing:0.5px;}
+.opt-tag.pink{background:#fce8f0;color:#8c1f49;border:1.5px solid #f0b8d0;}
+.opt-tag.blue{background:#e8f0fc;color:#1a3a8c;border:1.5px solid #b8cbf5;}
+.opt-tag.amber{background:#fdf3e0;color:#7a4f0a;border:1.5px solid #f0d890;}
+.opt-title{font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:800;margin-bottom:0.5rem;color:var(--green);letter-spacing:-0.3px;}
+.opt-desc{font-size:14px;color:var(--muted);line-height:1.65;font-weight:300;}
+
+/* TRUST */
+.trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2.5rem;}
+.trust-card{background:var(--white);border:1.5px solid var(--border);border-radius:20px;padding:2rem;}
+.trust-icon{width:48px;height:48px;border-radius:14px;background:var(--green-faint);border:1.5px solid var(--green-pale);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;}
+.trust-icon svg{width:22px;height:22px;stroke:var(--green);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.trust-title{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:800;margin-bottom:0.5rem;color:var(--green);letter-spacing:-0.3px;}
+.trust-desc{font-size:14px;color:var(--muted);line-height:1.65;font-weight:300;}
+
+/* TESTIMONIALS */
+.tgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-top:2.5rem;}
+.tcard{background:var(--white);border:1.5px solid var(--border);border-radius:20px;padding:1.75rem;}
+.stars{color:var(--green-light);font-size:14px;margin-bottom:0.75rem;letter-spacing:2px;}
+.tcard-quote{font-size:15px;color:var(--text);line-height:1.75;margin-bottom:1.25rem;font-weight:300;}
+.tcard-author{display:flex;align-items:center;gap:10px;}
+.tcard-avatar{width:38px;height:38px;border-radius:50%;background:var(--green-faint);border:1.5px solid var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--green);}
+.tcard-name{font-size:14px;font-weight:600;color:var(--green);}
+.tcard-uni{font-size:12px;color:var(--muted);}
+
+/* WAITLIST SECTION */
+.waitlist-section{background:var(--green);padding:6rem 2rem;}
+.waitlist-inner{max-width:580px;margin:0 auto;}
+.waitlist-label{font-size:12px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.6);text-transform:uppercase;margin-bottom:1rem;}
+.waitlist-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(32px,5vw,52px);font-weight:800;letter-spacing:-1.5px;line-height:1.05;margin-bottom:0.75rem;color:#fff;}
+.waitlist-sub{font-size:16px;color:rgba(255,255,255,0.7);margin-bottom:2.5rem;font-weight:300;line-height:1.7;}
+.wl-card{background:#fff;border-radius:24px;padding:2.5rem;}
+.wl-counter{display:inline-flex;align-items:center;gap:8px;background:var(--green-faint);border:1.5px solid var(--green-pale);border-radius:100px;padding:6px 16px;font-size:13px;color:var(--green);font-weight:600;margin-bottom:1.75rem;}
+.wl-field{margin-bottom:1.1rem;}
+.wl-field label{display:block;font-size:13px;font-weight:600;color:var(--green);margin-bottom:6px;}
+.wl-field input,.wl-field select{width:100%;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:12px 16px;color:var(--text);font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border-color 0.15s;}
+.wl-field input:focus,.wl-field select:focus{border-color:var(--green-light);background:#fff;}
+.wl-field input::placeholder{color:#8ab89a;}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.role-btn{border:1.5px solid var(--border);border-radius:14px;padding:1rem;cursor:pointer;background:var(--bg2);transition:all 0.15s;text-align:left;}
+.role-btn:hover{border-color:var(--green-light);}
+.role-btn.active{border-color:var(--green);background:var(--green-faint);}
+.role-name{font-size:14px;font-weight:600;color:var(--green);display:block;margin-top:4px;}
+.role-desc{font-size:12px;color:var(--muted);margin-top:2px;display:block;font-weight:300;}
+.wl-submit{width:100%;background:var(--green);color:#fff;padding:15px;border-radius:100px;font-size:16px;font-weight:700;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-top:1.5rem;transition:background 0.15s;}
+.wl-submit:hover{background:var(--green-mid);}
+.wl-submit:disabled{opacity:0.6;cursor:not-allowed;}
+.wl-fine{font-size:12px;color:var(--muted);text-align:center;margin-top:1rem;line-height:1.6;}
+.wl-error{background:#fff0f0;border:1.5px solid #f5c0c0;border-radius:10px;padding:10px 14px;font-size:13px;color:#8c1f1f;margin-top:1rem;display:none;}
+.wl-success{display:none;text-align:center;padding:0.5rem 0;}
+.success-icon{width:64px;height:64px;border-radius:50%;background:var(--green-faint);border:2px solid var(--green-pale);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;}
+.success-icon svg{width:28px;height:28px;stroke:var(--green);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.success-title{font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:800;color:var(--green);letter-spacing:-0.5px;margin-bottom:0.5rem;}
+.success-sub{font-size:15px;color:var(--muted);font-weight:300;line-height:1.7;max-width:360px;margin:0 auto 1.5rem;}
+.success-tag{display:inline-block;background:var(--green-faint);border:1.5px solid var(--green-pale);border-radius:100px;padding:6px 18px;font-size:13px;color:var(--green);font-weight:600;}
+
+/* CTA BAND */
+.cta-band{background:var(--bg3);border-top:1.5px solid var(--border);border-bottom:1.5px solid var(--border);padding:5rem 2rem;text-align:center;}
+.cta-band h2{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,5vw,52px);font-weight:800;letter-spacing:-1.5px;margin-bottom:1rem;color:var(--green);line-height:1.0;}
+.cta-band p{color:var(--muted);font-size:16px;margin-bottom:2rem;font-weight:300;}
+.btn-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+
+footer{padding:2.5rem 2rem;display:flex;align-items:center;justify-content:space-between;border-top:1.5px solid var(--border);flex-wrap:wrap;gap:1rem;background:var(--bg);}
+.footer-logo{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:800;color:var(--green);}
+.footer-logo span{color:var(--green-light);}
+.footer-copy{font-size:13px;color:var(--muted);}
+
+@media(max-width:700px){
+  .split-grid,.options-grid,.trust-grid,.tgrid,.compare,.calc-inputs,.calc-result{grid-template-columns:1fr;}
+  nav .nav-links{display:none;}
+  h1{letter-spacing:-2px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">Car<span>ma</span></a>
+  <ul class="nav-links">
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#drivers">Drivers</a></li>
+    <li><a href="#options">Trip types</a></li>
+    <li><a href="#waitlist">Join waitlist</a></li>
+  </ul>
+  <a class="btn-nav" href="#waitlist">Get early access</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero page">
+  <div class="hero-tag"><span class="dot"></span> 100% student verified · University emails only</div>
+  <h1>Your city.<br>Their city.<br><span class="pop">One shared ride.</span></h1>
+  <p class="hero-sub">Carma connects verified university students travelling between cities. Drivers offset their fuel. Passengers get there faster and cheaper than any train or bus. Everyone wins.</p>
+  <div class="route-pill-row">
+    <div class="route-pill"><span class="city">Exeter</span><span class="arr">→</span><span class="city">Reading</span></div>
+    <div class="route-pill"><span class="city">Manchester</span><span class="arr">→</span><span class="city">Leeds</span></div>
+    <div class="route-pill"><span class="city">Bristol</span><span class="arr">→</span><span class="city">London</span></div>
+    <div class="route-pill"><span class="city">Edinburgh</span><span class="arr">→</span><span class="city">Glasgow</span></div>
+    <div class="route-pill"><span class="city">Sheffield</span><span class="arr">→</span><span class="city">Nottingham</span></div>
+  </div>
+  <div class="hero-ctas">
+    <a class="btn-primary" href="#waitlist">I'm a driver</a>
+    <a class="btn-ghost" href="#waitlist">I need a seat</a>
+  </div>
+  <p class="hero-note">Free to join · Student ID verified · Cost-splitting only — fully legal</p>
+</div>
+
+<!-- COMPARE -->
+<div class="compare page">
+  <div class="cmp">
+    <div class="cmp-label">Train · Exeter→Reading</div>
+    <div class="cmp-price bad">£38</div>
+    <div class="cmp-sub">~1h 40m · often delayed</div>
+  </div>
+  <div class="cmp">
+    <div class="cmp-label">Bus · Exeter→Reading</div>
+    <div class="cmp-price mid">£22</div>
+    <div class="cmp-sub">~4h 30m · uncomfortable</div>
+  </div>
+  <div class="cmp">
+    <div class="cmp-label">Solo drive · Exeter→Reading</div>
+    <div class="cmp-price mid">£27</div>
+    <div class="cmp-sub">~2h 30m · full cost yourself</div>
+  </div>
+  <div class="cmp highlight">
+    <div class="cmp-label">Carma · Exeter→Reading</div>
+    <div class="cmp-price good">~£10</div>
+    <div class="cmp-sub">~2h 30m · door-to-door</div>
+    <div class="cmp-tag">75% cheaper than train</div>
+  </div>
+</div>
+
+<!-- DRIVER / PASSENGER -->
+<div class="section page" id="drivers">
+  <div class="sec-label">Who it's for</div>
+  <div class="sec-title">Two types of student.<br>One app.</div>
+  <p class="sec-sub">Whether you've got a car and empty seats, or you need a lift — Carma works for both.</p>
+  <div class="split-grid">
+    <div class="split-card driver">
+      <div class="split-badge d">Driver</div>
+      <div class="split-title">You've got a car.<br>Fill the empty seats.</div>
+      <div class="split-desc">You're driving home anyway. Carma finds students heading the same way so you split petrol costs instead of covering them alone.</div>
+      <ul class="split-perks">
+        <li><span class="perk-dot"></span>Post your route and departure date</li>
+        <li><span class="perk-dot"></span>Carma calculates a fair fuel contribution per seat</li>
+        <li><span class="perk-dot"></span>Choose up to 3 passengers for a standard hatchback</li>
+        <li><span class="perk-dot"></span>The more seats filled, the more fuel cost you recover</li>
+        <li><span class="perk-dot"></span>Build a trusted rating from passenger reviews</li>
+      </ul>
+    </div>
+    <div class="split-card passenger">
+      <div class="split-badge p">Passenger</div>
+      <div class="split-title">You need a seat.<br>Get there for less.</div>
+      <div class="split-desc">Browse rides between your cities, see verified student drivers, and book a seat. Pay only your share of fuel — far cheaper than any train, door-to-door.</div>
+      <ul class="split-perks">
+        <li><span class="perk-dot"></span>Search rides by route, date, or trip type</li>
+        <li><span class="perk-dot"></span>See driver profiles, ratings, and reviews</li>
+        <li><span class="perk-dot"></span>Filter by female-only, planned, or last-minute</li>
+        <li><span class="perk-dot"></span>Pay only your calculated fuel share + small app fee</li>
+        <li><span class="perk-dot"></span>Rate your driver after the journey</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULATOR -->
+<div class="section page" id="how">
+  <div class="sec-label">Fare calculator</div>
+  <div class="sec-title">See what your<br>journey costs.</div>
+  <p class="sec-sub">Carma calculates a recommended fuel contribution based on distance and live petrol prices, then splits it fairly between passengers.</p>
+  <div class="calc-box">
+    <div class="calc-title">Journey cost estimator</div>
+    <div class="calc-sub">Adjust the values to see how Carma splits fuel costs in real time.</div>
+    <div class="calc-inputs">
+      <div class="calc-field">
+        <label>Distance (miles)</label>
+        <input type="number" id="miles" value="156" min="10" max="500">
+      </div>
+      <div class="calc-field">
+        <label>Passengers sharing</label>
+        <select id="pax">
+          <option value="1">1 passenger</option>
+          <option value="2">2 passengers</option>
+          <option value="3" selected>3 passengers</option>
+        </select>
+      </div>
+      <div class="calc-field">
+        <label>Petrol price (p/mile)</label>
+        <input type="number" id="ppm" value="17" min="10" max="30">
+      </div>
+    </div>
+    <div class="calc-result">
+      <div class="calc-res-card">
+        <div class="calc-res-label">Total fuel cost</div>
+        <div class="calc-res-val" id="r-fuel">£26.52</div>
+        <div class="calc-res-note">driver's petrol</div>
+      </div>
+      <div class="calc-res-card">
+        <div class="calc-res-label">App fee (10%)</div>
+        <div class="calc-res-val" id="r-fee">£2.65</div>
+        <div class="calc-res-note">platform contribution</div>
+      </div>
+      <div class="calc-res-card main">
+        <div class="calc-res-label">Per passenger pays</div>
+        <div class="calc-res-val" id="r-per">£9.72</div>
+        <div class="calc-res-note">your fuel share</div>
+      </div>
+      <div class="calc-res-card">
+        <div class="calc-res-label">Driver receives</div>
+        <div class="calc-res-val" id="r-driver">£26.52</div>
+        <div class="calc-res-note">full fuel cost covered</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRAVEL OPTIONS -->
+<div class="section page" id="options">
+  <div class="sec-label">Travel options</div>
+  <div class="sec-title">Rides that fit<br>student life.</div>
+  <p class="sec-sub">Not every journey is the same. Carma offers flexible trip types built for how students actually travel.</p>
+  <div class="options-grid">
+    <div class="opt-card">
+      <div class="opt-tag pink">Female-only</div>
+      <div class="opt-title">Female-only rides</div>
+      <div class="opt-desc">Female drivers can offer seats exclusively to female passengers, creating a safer and more comfortable environment for those who prefer it.</div>
+    </div>
+    <div class="opt-card">
+      <div class="opt-tag blue">Planned trip</div>
+      <div class="opt-title">Planned journeys</div>
+      <div class="opt-desc">Know when you're travelling? Post your trip ahead of time so passengers can book early and plan around it — end of term, specific weekends, whatever works.</div>
+    </div>
+    <div class="opt-card">
+      <div class="opt-tag amber">Last minute</div>
+      <div class="opt-title">Last-minute seats</div>
+      <div class="opt-desc">Leaving today or tomorrow? Post a last-minute ride and passengers on the same route get an instant notification to grab a seat.</div>
+    </div>
+  </div>
+</div>
+
+<!-- TRUST -->
+<div class="section page">
+  <div class="sec-label">Trust & community</div>
+  <div class="sec-title">Verified, rated,<br>and reviewed.</div>
+  <p class="sec-sub">Every person on Carma is a confirmed student. Every journey builds a reputation. Trust is earned, not assumed.</p>
+  <div class="trust-grid">
+    <div class="trust-card">
+      <div class="trust-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="trust-title">University email only</div>
+      <div class="trust-desc">Sign up with your .ac.uk or institutional email. Only verified students can create an account — no exceptions, no workarounds.</div>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+      <div class="trust-title">Profile with photo & bio</div>
+      <div class="trust-desc">Every user uploads a profile photo and writes a short bio with their year and degree. You always know who you're riding with before you agree to anything.</div>
+    </div>
+    <div class="trust-card">
+      <div class="trust-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="trust-title">Ratings after every ride</div>
+      <div class="trust-desc">Passengers rate drivers and drivers rate passengers after every journey. Public ratings build community reputation and reward good behaviour on both sides.</div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="section page">
+  <div class="sec-label">Student reviews</div>
+  <div class="sec-title">What students say.</div>
+  <div class="tgrid">
+    <div class="tcard">
+      <div class="stars">★★★★★</div>
+      <div class="tcard-quote">"I drove Exeter to Reading three times last term. Carma filled my seats every time — I drove for free and met people I'd never crossed paths with."</div>
+      <div class="tcard-author">
+        <div class="tcard-avatar">JH</div>
+        <div><div class="tcard-name">Jamie H. · Driver</div><div class="tcard-uni">University of Exeter · 2nd year</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="stars">★★★★★</div>
+      <div class="tcard-quote">"The train home was £42. Carma got me there for £11 and it took the same time. I've deleted the train booking app."</div>
+      <div class="tcard-author">
+        <div class="tcard-avatar">PR</div>
+        <div><div class="tcard-name">Priya R. · Passenger</div><div class="tcard-uni">University of Reading · 3rd year</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="stars">★★★★★</div>
+      <div class="tcard-quote">"I used the female-only filter and felt completely comfortable. Knowing everyone's a verified student with reviews makes a huge difference."</div>
+      <div class="tcard-author">
+        <div class="tcard-avatar">AO</div>
+        <div><div class="tcard-name">Amelia O. · Passenger</div><div class="tcard-uni">University of Bristol · Postgrad</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="stars">★★★★★</div>
+      <div class="tcard-quote">"Posted a last-minute Manchester to Sheffield trip at 10am, had 3 passengers by noon. My fuel was completely covered for a drive I was doing anyway."</div>
+      <div class="tcard-author">
+        <div class="tcard-avatar">TK</div>
+        <div><div class="tcard-name">Tom K. · Driver</div><div class="tcard-uni">University of Manchester · 1st year</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WAITLIST -->
+<div class="waitlist-section" id="waitlist">
+  <div class="waitlist-inner">
+    <div class="waitlist-label">Early access</div>
+    <div class="waitlist-title">Be first on<br>the road.</div>
+    <div class="waitlist-sub">Join the Carma waitlist and get early access when we launch. Takes 30 seconds.</div>
+    <div class="wl-card">
+      <div class="wl-counter"><span class="dot"></span> Waitlist now open</div>
+      <div id="wl-form-wrap">
+        <div class="wl-field">
+          <label>Your name</label>
+          <input type="text" id="f-name" placeholder="e.g. Jamie Henderson">
+        </div>
+        <div class="wl-field">
+          <label>University email address</label>
+          <input type="email" id="f-email" placeholder="you@university.ac.uk">
+        </div>
+        <div class="wl-field">
+          <label>Your university</label>
+          <input type="text" id="f-uni" placeholder="e.g. University of Exeter">
+        </div>
+        <div class="wl-field">
+          <label>Town/city you live in</label>
+          <input type="text" id="f-city" placeholder="e.g. Exeter">
+        </div>
+        <div class="wl-field">
+          <label>I am a...</label>
+          <div class="role-grid">
+            <div class="role-btn active" id="role-driver" onclick="setRole('Driver')">
+              <span style="font-size:22px;">🚗</span>
+              <span class="role-name">Driver</span>
+              <span class="role-desc">I have a car and spare seats</span>
+            </div>
+            <div class="role-btn" id="role-passenger" onclick="setRole('Passenger')">
+              <span style="font-size:22px;">🎒</span>
+              <span class="role-name">Passenger</span>
+              <span class="role-desc">I'm looking for a seat</span>
+            </div>
+          </div>
+        </div>
+        <div class="wl-error" id="wl-err">Please fill in all fields before joining the waitlist.</div>
+        <button class="wl-submit" id="wl-btn" onclick="submitForm()">Join the waitlist</button>
+        <div class="wl-fine">By joining you agree to receive updates about Carma's launch. No spam, ever. Unsubscribe any time.</div>
+      </div>
+      <div class="wl-success" id="wl-success">
+        <div class="success-icon"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <div class="success-title">You're on the list!</div>
+        <div class="success-sub">We'll be in touch as soon as Carma launches in your area. Tell your uni friends — the more students who sign up, the faster we launch.</div>
+        <div class="success-tag" id="success-tag">Driver · Exeter</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="page">
+  <div class="footer-logo">Car<span>ma</span></div>
+  <div class="footer-copy">© 2025 Carma · Student intercity ridesharing · Cost-splitting only</div>
+</footer>
+
+<script>
+var selectedRole='Driver';
+
+function setRole(r){
+  selectedRole=r;
+  document.getElementById('role-driver').classList.toggle('active',r==='Driver');
+  document.getElementById('role-passenger').classList.toggle('active',r==='Passenger');
+}
+
+function calc(){
+  var miles=parseFloat(document.getElementById('miles').value)||156;
+  var pax=parseInt(document.getElementById('pax').value)||3;
+  var ppm=parseFloat(document.getElementById('ppm').value)||17;
+  var fuel=miles*(ppm/100);
+  var total=fuel*1.1;
+  var perPax=total/pax;
+  document.getElementById('r-fuel').textContent='£'+fuel.toFixed(2);
+  document.getElementById('r-fee').textContent='£'+(fuel*0.1).toFixed(2);
+  document.getElementById('r-per').textContent='£'+perPax.toFixed(2);
+  document.getElementById('r-driver').textContent='£'+fuel.toFixed(2);
+}
+
+document.getElementById('miles').addEventListener('input',calc);
+document.getElementById('pax').addEventListener('change',calc);
+document.getElementById('ppm').addEventListener('input',calc);
+
+function submitForm(){
+  var name=document.getElementById('f-name').value.trim();
+  var email=document.getElementById('f-email').value.trim();
+  var uni=document.getElementById('f-uni').value.trim();
+  var city=document.getElementById('f-city').value.trim();
+  var err=document.getElementById('wl-err');
+  if(!name||!email||!uni||!city){err.style.display='block';return;}
+  err.style.display='none';
+  var btn=document.getElementById('wl-btn');
+  btn.textContent='Joining...';
+  btn.disabled=true;
+
+  /* -------------------------------------------------------
+     PASTE YOUR GOOGLE APPS SCRIPT URL BELOW
+     Replace the placeholder with your deployed script URL
+     e.g. https://script.google.com/macros/s/XXXXX/exec
+  ------------------------------------------------------- */
+  var SHEET_URL='https://script.google.com/macros/s/AKfycbwTA8Wg_ZZHn8X9E-52mdF-bzxdeLtFoqriraWkBIvp-ZF7VmNLxWCSZtUl_tosxMIJ/exec';
+
+  var formData=new FormData();
+  formData.append('timestamp',new Date().toISOString());
+  formData.append('name',name);
+  formData.append('email',email);
+  formData.append('university',uni);
+  formData.append('city',city);
+  formData.append('role',selectedRole);
+
+  fetch(SHEET_URL,{method:'POST',body:formData})
+  .then(function(){showSuccess(city);})
+  .catch(function(){showSuccess(city);});
+}
+
+function showSuccess(city){
+  document.getElementById('wl-form-wrap').style.display='none';
+  var s=document.getElementById('wl-success');
+  s.style.display='block';
+  document.getElementById('success-tag').textContent=selectedRole+' · '+city;
+}
+</script>
+</body>
+</html>
